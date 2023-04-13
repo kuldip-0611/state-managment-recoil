@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import { useEffect } from 'react';
 import './App.css';
+import {  useRecoilState, useRecoilValue } from 'recoil';
+import { apiState, viewAtom } from './atoms';
+
+
 
 function App() {
+  const [apiData,setApiData] = useRecoilState(apiState)
+  const view = useRecoilValue(viewAtom)
+    
+
+  useEffect(()=>{
+    const getData = async ()=>{
+      const url = `https://dummyjson.com/products/${view}`;
+      const data = await fetch(url)
+      const body = await data.json();
+      setApiData(body)
+    }
+    getData();
+
+  },[view])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     {
+       apiData.products &&  apiData.products.map(item=><h1>{item.title}</h1>)
+     }
     </div>
   );
 }
