@@ -3,34 +3,45 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
+import { useRecoilState } from 'recoil';
+import { todoAppState } from '../atoms';
+import TodoList from './TodoList';
 
 const TodoDashBoard = () => {
     const [task,setTask] = useState('');
+    const [addTask,setTasks] = useRecoilState(todoAppState); 
 
     const handleClick = ()=>{
-        console.log(task)
+        if(task === ''){
+            return addTask;
+        }
+        else{
+            setTasks([...addTask,task])
+            setTask('')
+
+        }
+       
+          
     }
     return (
         <div>
             <div className='container bg-dark rounded text-light mt-5'>
                 <div className='row'>
                     <div className='col ' style={{ 'borderRight': '1px solid white' }}>
-                        <span>1</span>
-                        <p>TASKS COMPLETE</p>
+                        <span>{addTask.length}</span>
+                        <p>TOTAL TASKS </p>
 
                     </div>
-                    <div className='col'>
-                        <span>2</span>
-                        <p>TASKS REMAINING</p>
-                    </div>
+                    
                 </div>
             </div>
             <div className='container'>
 
                 <ListGroup as="ol" numbered className='mt-5'>
-                    <ListGroup.Item as="li" className='bg-dark text-light'>Cras justo odio</ListGroup.Item>
-                    <ListGroup.Item as="li" className='bg-dark text-light'>Cras justo odio</ListGroup.Item>
-                    <ListGroup.Item as="li" className='bg-dark text-light'>Cras justo odio</ListGroup.Item>
+                   {
+                     addTask.map((item,index)=> <TodoList item={item} index={index} key={index} />)
+                   }
+                   
                 </ListGroup>
 
             </div>
